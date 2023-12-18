@@ -8,16 +8,14 @@ public class GrandmaController : MonoBehaviour
 
     public GameObject Player;
     
-
-    private float timer = 0f;
+    public PlatePlacer platePlacer;
 
     private float minLookTimer = 1f;
     private float maxLookTimer = 3f;
     
     private float minWorkTimer = 3f;
-    private float maxWorkTimer = 7f;
+    private float maxWorkTimer = 5f;
 
-    private float lookIntervalReached = 0f;
 
     public float timeToHit = 5f;
 
@@ -50,12 +48,14 @@ public class GrandmaController : MonoBehaviour
         {
             StartHitCheck();
         }
+        
     }
     
     IEnumerator GrandmaLooking()
     {
         float lookInterval = Random.Range(minLookTimer, maxLookTimer);
         State = GrandmaState.Looking;
+        platePlacer.Invoke("PlacePlate", 1);
         StartHitCheck();
         yield return new WaitForSeconds(lookInterval);
         StartCoroutine(GrandmaWorking());

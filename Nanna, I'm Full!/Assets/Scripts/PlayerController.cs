@@ -7,45 +7,51 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
-    public Slider meterSlider; // Reference to the UI Slider
-    private float meterValue = 0f;
-    public float meterIncreaseRate = 0.1f; // Rate at which the meter increases
-
     public Animator animator;
     public TextMeshProUGUI scoreText;
+    public PlatePlacer platePlacer;
     private int score = 0;
     public int health = 3;
-    private float timer = 0f;
+    private float scoreTimer = 0f;
     private float scoreInterval = 1f;
-    // Update is called once per frame
+    
+    public Image[] hearts;
+    
     void Update()
     {
-        
-        if (Input.GetKey(KeyCode.Space))
+        if (Input.GetKey(KeyCode.Space) && platePlacer.numOfPlates > 0)
         {
             //animator.SetBool("IsEating", true);
-            timer += Time.deltaTime;
-            if (timer >= scoreInterval)
+            scoreTimer += Time.deltaTime;
+            if (scoreTimer >= scoreInterval)
             {
                 score++;
-                timer = 0f;
+                scoreTimer = 0f;
                 Debug.Log("Score: " + score);
                 scoreText.text = "   Score: " + score;
+            }
+
+            if (platePlacer.plateHealth > 0 && platePlacer.numOfPlates > 0)
+            {
+                platePlacer.plateHealth -= Time.deltaTime;
+                //Debug.Log("Plate Health: " + platePlacer.plateHealth);
+            }
+            else if (platePlacer.plateHealth <= 0 && platePlacer.numOfPlates > 0)
+            {
+                platePlacer.RemovePlate();
             }
         }
         else
         {
-            meterValue += meterIncreaseRate * Time.deltaTime;
-            meterValue = Mathf.Clamp(meterValue, 0, 1); // Clamp value between 0 and 1
-            meterSlider.value = meterValue; // Update the UI Slider
             //animator.SetBool("IsEating", false);
-            timer = 0f;
         }
+        
     }
 
     public void PlayerHurt()
     {
         health--;
+        UpdateHeartDisplay();
         if (health == 0)
         {
             Debug.Log("You died!");
@@ -53,6 +59,21 @@ public class PlayerController : MonoBehaviour
         else if (health > 0)
         {
             Debug.Log("You got hurt! Health: " + health);
+        }
+    }
+    
+    void UpdateHeartDisplay()
+    {
+        for (int i = 0; i < hearts.Length; i++)
+        {
+            if (i < health)
+            {
+                hearts[i].enabled = true; // Show heart
+            }
+            else
+            {
+                hearts[i].enabled = false; // Hide heart
+            }
         }
     }
     
