@@ -8,13 +8,18 @@ public class GrandmaController : MonoBehaviour
     public GameObject Player;
     public PlatePlacer platePlacer;
     private Vector3 originalPosition;
+    public GameObject targetPositionObject;
 
+    
     private float minLookTimer = 3f;
     private float maxLookTimer = 5f;
     
     private float minWorkTimer = 5f;
     private float maxWorkTimer = 7f;
-
+    
+    public float difficultyIncrease = 0.1f; // The amount by which the timers are decreased
+    public float minTimerLimit = 1f; // Minimum limit for timers to prevent them from becoming too short
+    public float maxTimerLimit = 3f;
 
     public float timeToHit = 5f;
 
@@ -64,6 +69,13 @@ public class GrandmaController : MonoBehaviour
         platePlacer.Invoke("PlacePlate", 1);
         StartHitCheck();
         yield return new WaitForSeconds(lookInterval);
+        
+        // Decrease the timers, ensuring they don't go below the minimum limit
+        minWorkTimer = Mathf.Max(minWorkTimer - difficultyIncrease, minTimerLimit);
+        maxWorkTimer = Mathf.Max(maxWorkTimer - difficultyIncrease, maxTimerLimit);
+        
+        Debug.Log("Min Timer is: " + minWorkTimer);
+        Debug.Log("Max Timer is: " + maxWorkTimer);
         StartCoroutine(GrandmaWorking());
     }
     
@@ -105,15 +117,22 @@ public class GrandmaController : MonoBehaviour
     public void HandlePlatesState()
     {
         State = GrandmaState.HandlingPlates;
-        MoveToPlates();
     }
     
     public void MoveToPlates()
     {
+        State = GrandmaState.NotLooking;
         Debug.Log("Moving to plates");
         // Move the grandmother to the position behind the clean plates
-        Vector3 platesPosition = platePlacer.spawnPointCleanPlate.transform.position; // Adjust as needed
-        transform.position = new Vector3(platesPosition.x, platesPosition.y, transform.position.z);
+        if (targetPositionObject != null)
+        {
+            // Move the grandmother to the position of the target object
+            transform.position = targetPositionObject.transform.position;
+        }
+        else
+        {
+            Debug.LogError("Target position object is not set");
+        }
     }
 
     public void ReturnToOriginalAndHandlePlates()

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Unity.Services.Analytics;
 using UnityEngine.SceneManagement;
@@ -9,6 +10,8 @@ public class PlatePlacer : MonoBehaviour
     public GameObject spawnPointCleanPlate;
     public GameObject platePrefab;
     public GameObject cleanPlatePrefab;
+    private Vector3 originalCleanPlateSpawnPointPosition;
+
     
     public GrandmaController grandmaController; // Add this public variable
 
@@ -21,8 +24,14 @@ public class PlatePlacer : MonoBehaviour
     public List<GameObject> _plates = new List<GameObject>();
     public List<GameObject> _cleanPlates = new List<GameObject>();
     // Start is called before the first frame update
-    
-    
+
+    public void Start()
+    {
+        plateHealth = 3;
+        originalCleanPlateSpawnPointPosition = spawnPointCleanPlate.transform.position;
+
+    }
+
     public void PlacePlate()
     {
         numOfPlates++;
@@ -60,6 +69,7 @@ public class PlatePlacer : MonoBehaviour
 
     public void RemovePlate()
     {
+        plateHealth = 3;
         numOfPlates--;
         if (_plates.Count > 0)
         {
@@ -69,7 +79,6 @@ public class PlatePlacer : MonoBehaviour
             foreach (GameObject plate in _plates)
             {
                 plate.transform.position += Vector3.down; // Move the plate down (adjust the Vector3 as needed)
-                plateHealth = 3;
             }
 
         }
@@ -83,6 +92,7 @@ public class PlatePlacer : MonoBehaviour
         }
         _cleanPlates.Clear();
         numOfCleanPlates = 0;
+        spawnPointCleanPlate.transform.position = originalCleanPlateSpawnPointPosition;
     }
     
     public void PlateCrashing()
