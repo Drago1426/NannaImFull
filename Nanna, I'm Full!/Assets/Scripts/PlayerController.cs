@@ -34,10 +34,11 @@ public class PlayerController : MonoBehaviour
             if (platePlacer.plateHealth > 0 && platePlacer.numOfPlates > 0)
             {
                 platePlacer.plateHealth -= Time.deltaTime;
-                //Debug.Log("Plate Health: " + platePlacer.plateHealth);
+                Debug.Log("Plate Health: " + platePlacer.plateHealth);
             }
             else if (platePlacer.plateHealth <= 0 && platePlacer.numOfPlates > 0)
             {
+                platePlacer.PlaceCleanPlate();
                 platePlacer.RemovePlate();
             }
         }

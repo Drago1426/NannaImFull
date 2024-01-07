@@ -1,4 +1,4 @@
 ﻿public enum GrandmaState
 {
-    Looking, NotLooking
+    Looking, NotLooking, HandlingPlates
 }
