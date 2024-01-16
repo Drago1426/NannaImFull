@@ -28,7 +28,7 @@ public class PlayerController : MonoBehaviour
                 score++;
                 scoreTimer = 0f;
                 Debug.Log("Score: " + score);
-                scoreText.text = "   Score: " + score;
+                scoreText.text = "  Score: " + score;
             }
 
             if (platePlacer.plateHealth > 0 && platePlacer.numOfPlates > 0)
