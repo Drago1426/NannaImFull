@@ -21,7 +21,7 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.Space) && platePlacer.numOfPlates > 0)
         {
-            //animator.SetBool("IsEating", true);
+            animator.SetBool("IsGivingFood", true);
             scoreTimer += Time.deltaTime;
             if (scoreTimer >= scoreInterval)
             {
@@ -42,10 +42,15 @@ public class PlayerController : MonoBehaviour
                 platePlacer.RemovePlate();
             }
         }
+        else if (platePlacer.numOfPlates > 0)
+        {
+            animator.SetBool("IsGivingFood", false);
+        }
         else
         {
-            //animator.SetBool("IsEating", false);
+            animator.SetBool("IsGivingFood", false);
         }
+        
         
     }
 
