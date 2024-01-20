@@ -1,11 +1,10 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GrandmaController : MonoBehaviour
 {
     public Animator animator;
-    public GameObject Player;
+    public GameObject player;
     public PlatePlacer platePlacer;
     private Vector3 originalPosition;
     public GameObject targetPositionObject;
@@ -23,17 +22,17 @@ public class GrandmaController : MonoBehaviour
 
     public float timeToHit = 5f;
 
-    private GrandmaState _state = GrandmaState.NotLooking;
+    private GrandmaState state = GrandmaState.NotLooking;
 
     public GrandmaState State
     {
-        get => _state;
+        get => state;
         set
         {
-            _state = value;
-            animator.SetBool("IsLooking", _state == GrandmaState.Looking);
+            state = value;
+            animator.SetBool("IsLooking", state == GrandmaState.Looking);
             
-            if (_state == GrandmaState.HandlingPlates)
+            if (state == GrandmaState.HandlingPlates)
             {
                 // Call a coroutine or method to handle the plates
                 animator.SetBool("IsGetPlates", true);
@@ -101,7 +100,7 @@ public class GrandmaController : MonoBehaviour
             yield break; // Exit the coroutine if the space key is released
         }
         animator.SetBool("IsGoingToHit", true);
-        Player.GetComponent<PlayerController>().PlayerHurt(); // Call PlayerHurt method
+        player.GetComponent<PlayerController>().PlayerHurt(); // Call PlayerHurt method
         yield return new WaitForSeconds(1);
         animator.SetBool("IsGoingToHit", false);
     }

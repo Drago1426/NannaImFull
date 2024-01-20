@@ -1,7 +1,4 @@
-using System;
 using System.Collections.Generic;
-using Unity.Services.Analytics;
-using UnityEngine.SceneManagement;
 using UnityEngine;
 
 public class PlatePlacer : MonoBehaviour
@@ -16,13 +13,13 @@ public class PlatePlacer : MonoBehaviour
     public GrandmaController grandmaController; // Add this public variable
 
 
-    public int numOfPlates = 0;
-    public int numOfCleanPlates = 0;
+    public int numOfPlates;
+    public int numOfCleanPlates;
 
     public float plateHealth = 3;
 
-    public List<GameObject> _plates = new List<GameObject>();
-    public List<GameObject> _cleanPlates = new List<GameObject>();
+    public List<GameObject> plates = new List<GameObject>();
+    public List<GameObject> cleanPlates = new List<GameObject>();
     // Start is called before the first frame update
 
     public void Start()
@@ -37,7 +34,7 @@ public class PlatePlacer : MonoBehaviour
         numOfPlates++;
         GameObject newPlate = Instantiate(platePrefab, spawnPointFood.transform.position, Quaternion.identity);
         newPlate.transform.parent = transform;
-        _plates.Add(newPlate);
+        plates.Add(newPlate);
         spawnPointFood.transform.position += Vector3.up;
         Debug.Log("Number of Plates: " + numOfPlates);
 
@@ -52,7 +49,7 @@ public class PlatePlacer : MonoBehaviour
         numOfCleanPlates++;
         GameObject newCleanPlate = Instantiate(cleanPlatePrefab, spawnPointCleanPlate.transform.position, Quaternion.identity);
         newCleanPlate.transform.parent = transform;
-        _cleanPlates.Add(newCleanPlate);
+        cleanPlates.Add(newCleanPlate);
         spawnPointCleanPlate.transform.position += Vector3.up;
         Debug.Log("Number of Plates: " + numOfCleanPlates);
         
@@ -71,12 +68,12 @@ public class PlatePlacer : MonoBehaviour
     {
         plateHealth = 3;
         numOfPlates--;
-        if (_plates.Count > 0)
+        if (plates.Count > 0)
         {
-            Destroy(_plates[0]);
-            _plates.RemoveAt(0);
+            Destroy(plates[0]);
+            plates.RemoveAt(0);
             spawnPointFood.transform.position += Vector3.down;
-            foreach (GameObject plate in _plates)
+            foreach (GameObject plate in plates)
             {
                 plate.transform.position += Vector3.down; // Move the plate down (adjust the Vector3 as needed)
             }
@@ -86,11 +83,11 @@ public class PlatePlacer : MonoBehaviour
     
     public void HandleCleanPlates()
     {
-        foreach (GameObject cleanPlate in _cleanPlates)
+        foreach (GameObject cleanPlate in cleanPlates)
         {
             Destroy(cleanPlate); // Remove the clean plate
         }
-        _cleanPlates.Clear();
+        cleanPlates.Clear();
         numOfCleanPlates = 0;
         spawnPointCleanPlate.transform.position = originalCleanPlateSpawnPointPosition;
     }

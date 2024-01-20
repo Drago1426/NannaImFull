@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,11 +5,12 @@ using UnityEngine.UI;
 public class PlayerController : MonoBehaviour
 {
     public Animator animator;
+    public Animator dogAnimator;
     public TextMeshProUGUI scoreText;
     public PlatePlacer platePlacer;
-    private int score = 0;
+    private int score;
     public int health = 3;
-    private float scoreTimer = 0f;
+    private float scoreTimer;
     private float scoreInterval = 1f;
     
     public Image[] hearts;
@@ -23,6 +21,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKey(KeyCode.Space) && platePlacer.numOfPlates > 0)
         {
             animator.SetBool("IsEating", false);
+            dogAnimator.SetBool("IsEating", true);
             animator.SetBool("IsGivingFood", true);
             scoreTimer += Time.deltaTime;
             if (scoreTimer >= scoreInterval)
@@ -47,10 +46,12 @@ public class PlayerController : MonoBehaviour
         else if (platePlacer.numOfPlates > 0)
         {
             animator.SetBool("IsGivingFood", false);
+            dogAnimator.SetBool("IsEating", false);
             animator.SetBool("IsEating", true);
         }
         else
         {
+            dogAnimator.SetBool("IsEating", false);
             animator.SetBool("IsGivingFood", false);
             animator.SetBool("IsEating", false);
         }
