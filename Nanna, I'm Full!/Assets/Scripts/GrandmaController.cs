@@ -17,7 +17,7 @@ public class GrandmaController : MonoBehaviour
     private float minWorkTimer = 5f;
     private float maxWorkTimer = 7f;
     
-    public float difficultyIncrease = 0.1f; // The amount by which the timers are decreased
+    public float difficultyIncrease = 0.15f; // The amount by which the timers are decreased
     public float minTimerLimit = 1f; // Minimum limit for timers to prevent them from becoming too short
     public float maxTimerLimit = 3f;
 
@@ -36,6 +36,7 @@ public class GrandmaController : MonoBehaviour
             if (_state == GrandmaState.HandlingPlates)
             {
                 // Call a coroutine or method to handle the plates
+                animator.SetBool("IsGetPlates", true);
                 StartCoroutine(HandlePlatesRoutine());
             }
         }
@@ -99,7 +100,10 @@ public class GrandmaController : MonoBehaviour
         {
             yield break; // Exit the coroutine if the space key is released
         }
+        animator.SetBool("IsGoingToHit", true);
         Player.GetComponent<PlayerController>().PlayerHurt(); // Call PlayerHurt method
+        yield return new WaitForSeconds(1);
+        animator.SetBool("IsGoingToHit", false);
     }
     
     private IEnumerator HandlePlatesRoutine()
@@ -109,8 +113,9 @@ public class GrandmaController : MonoBehaviour
         yield return new WaitForSeconds(2); // Adjust the time as needed
         ReturnToOriginalAndHandlePlates();
         yield return new WaitForSeconds(1); // Adjust the time as needed
-
+        StartCoroutine(GrandmaWorking());
         // After handling plates, go back to working or looking state
+        animator.SetBool("IsGetPlates", false);
         State = GrandmaState.NotLooking;
     }
     
@@ -141,6 +146,7 @@ public class GrandmaController : MonoBehaviour
 
         // Move the grandmother back to her original position
         transform.position = originalPosition;
+        animator.SetBool("IsGetPlates", false);
 
         // Call a method from PlatePlacer to handle clean plates
         platePlacer.HandleCleanPlates(); 

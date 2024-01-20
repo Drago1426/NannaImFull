@@ -19,8 +19,10 @@ public class PlayerController : MonoBehaviour
     
     void Update()
     {
+        
         if (Input.GetKey(KeyCode.Space) && platePlacer.numOfPlates > 0)
         {
+            animator.SetBool("IsEating", false);
             animator.SetBool("IsGivingFood", true);
             scoreTimer += Time.deltaTime;
             if (scoreTimer >= scoreInterval)
@@ -45,10 +47,12 @@ public class PlayerController : MonoBehaviour
         else if (platePlacer.numOfPlates > 0)
         {
             animator.SetBool("IsGivingFood", false);
+            animator.SetBool("IsEating", true);
         }
         else
         {
             animator.SetBool("IsGivingFood", false);
+            animator.SetBool("IsEating", false);
         }
         
         
@@ -56,6 +60,7 @@ public class PlayerController : MonoBehaviour
 
     public void PlayerHurt()
     {
+        animator.SetBool("IsHurt", true);
         health--;
         UpdateHeartDisplay();
         if (health == 0)
@@ -66,6 +71,7 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log("You got hurt! Health: " + health);
         }
+        animator.SetBool("IsHurt", false);
     }
     
     void UpdateHeartDisplay()
