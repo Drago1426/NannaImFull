@@ -101,7 +101,7 @@ public class GrandmaController : MonoBehaviour
         }
         animator.SetBool("IsGoingToHit", true);
         player.GetComponent<PlayerController>().PlayerHurt(); // Call PlayerHurt method
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(2);
         animator.SetBool("IsGoingToHit", false);
     }
     

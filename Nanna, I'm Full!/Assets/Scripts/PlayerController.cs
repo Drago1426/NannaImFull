@@ -1,12 +1,15 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
     public Animator animator;
     public Animator dogAnimator;
     public TextMeshProUGUI scoreText;
+    public TextMeshProUGUI yourScoreText;
+
     public PlatePlacer platePlacer;
     private int score;
     public int health = 3;
@@ -30,6 +33,7 @@ public class PlayerController : MonoBehaviour
                 scoreTimer = 0f;
                 Debug.Log("Score: " + score);
                 scoreText.text = "  Score: " + score;
+
             }
 
             if (platePlacer.plateHealth > 0 && platePlacer.numOfPlates > 0)
@@ -53,7 +57,6 @@ public class PlayerController : MonoBehaviour
         {
             dogAnimator.SetBool("IsEating", false);
             animator.SetBool("IsGivingFood", false);
-            animator.SetBool("IsEating", false);
         }
         
         
@@ -61,18 +64,32 @@ public class PlayerController : MonoBehaviour
 
     public void PlayerHurt()
     {
-        animator.SetBool("IsHurt", true);
         health--;
         UpdateHeartDisplay();
         if (health == 0)
         {
             Debug.Log("You died!");
+            PlayerPrefs.SetInt("CurrentScore", score);
+            CheckForHighScore(score);
+            PlayerPrefs.Save();
+
+            SceneManager.LoadScene("EndScreen");
         }
         else if (health > 0)
         {
             Debug.Log("You got hurt! Health: " + health);
         }
-        animator.SetBool("IsHurt", false);
+        
+    }
+    
+    private void CheckForHighScore(int currentScore)
+    {
+        int highScore = PlayerPrefs.GetInt("HighScore", 0);
+        if (currentScore > highScore)
+        {
+            PlayerPrefs.SetInt("HighScore", currentScore);
+            PlayerPrefs.Save();
+        }
     }
     
     void UpdateHeartDisplay()
